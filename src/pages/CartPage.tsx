@@ -25,7 +25,7 @@ const CartPage = () => {
 
     // Map cart items to products data
     const productData = storedCart.map((item: CartItem) => {
-      const product = products.find((p) => p.id === item.id);
+      const product = products.find((p) => p.id.toString() === item.id);
       return {
         ...product,
         quantity: item.quantity,
@@ -44,7 +44,7 @@ const CartPage = () => {
 
     // Update cart products
     const productData = updatedCart.map((item: CartItem) => {
-      const product = products.find((p) => p.id === item.id);
+      const product = products.find((p) => p.id.toString() === item.id);
       return {
         ...product,
         quantity: item.quantity,
