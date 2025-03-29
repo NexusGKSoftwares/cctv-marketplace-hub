@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { products } from "@/data/products";
 import { showSuccessAlert, showConfirmationAlert } from "@/utils/sweetAlert";
+import { toast } from "sonner";
 
 type CartItem = {
   id: string;
@@ -19,45 +20,72 @@ const CartPage = () => {
   const [cartProducts, setCartProducts] = useState<any[]>([]);
   const navigate = useNavigate();
 
+  // Function to load cart data
+  const loadCartData = () => {
+    try {
+      const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+      setCartItems(storedCart);
+
+      // Map cart items to products data
+      const productData = storedCart
+        .map((item: CartItem) => {
+          const product = products.find((p) => p.id.toString() === item.id);
+          if (!product) return null; // Skip if product not found
+          return {
+            ...product,
+            quantity: item.quantity,
+          };
+        })
+        .filter(Boolean); // Remove any null items
+
+      setCartProducts(productData);
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      toast.error("There was an error loading your cart");
+    }
+  };
+
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCartItems(storedCart);
+    // Load cart on mount
+    loadCartData();
 
-    // Map cart items to products data
-    const productData = storedCart
-      .map((item: CartItem) => {
-        const product = products.find((p) => p.id.toString() === item.id);
-        if (!product) return null; // Skip if product not found
-        return {
-          ...product,
-          quantity: item.quantity,
-        };
-      })
-      .filter(Boolean); // Remove any null items
-
-    setCartProducts(productData);
+    // Add storage event listener to update cart when changed in another tab
+    const handleStorageChange = () => {
+      loadCartData();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const updateCart = (updatedCart: CartItem[]) => {
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    
-    // Create a custom event to notify other tabs
-    window.dispatchEvent(new Event("storage"));
+    try {
+      setCartItems(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      
+      // Create a custom event to notify other tabs
+      window.dispatchEvent(new Event("storage"));
 
-    // Update cart products
-    const productData = updatedCart
-      .map((item: CartItem) => {
-        const product = products.find((p) => p.id.toString() === item.id);
-        if (!product) return null; // Skip if product not found
-        return {
-          ...product,
-          quantity: item.quantity,
-        };
-      })
-      .filter(Boolean); // Remove any null items
+      // Update cart products
+      const productData = updatedCart
+        .map((item: CartItem) => {
+          const product = products.find((p) => p.id.toString() === item.id);
+          if (!product) return null; // Skip if product not found
+          return {
+            ...product,
+            quantity: item.quantity,
+          };
+        })
+        .filter(Boolean); // Remove any null items
 
-    setCartProducts(productData);
+      setCartProducts(productData);
+    } catch (error) {
+      console.error("Error updating cart:", error);
+      toast.error("There was an error updating your cart");
+    }
   };
 
   const increaseQuantity = (id: string) => {
@@ -79,10 +107,12 @@ const CartPage = () => {
   const removeItem = (id: string) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     updateCart(updatedCart);
+    toast.success("Item removed from cart");
   };
 
   const clearCart = () => {
     updateCart([]);
+    toast.success("Cart cleared");
   };
 
   const calculateSubtotal = () => {
@@ -159,7 +189,7 @@ const CartPage = () => {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => decreaseQuantity(item.id)}
+                              onClick={() => decreaseQuantity(item.id.toString())}
                               disabled={item.quantity <= 1}
                             >
                               <Minus className="h-4 w-4" />
@@ -169,7 +199,7 @@ const CartPage = () => {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => increaseQuantity(item.id)}
+                              onClick={() => increaseQuantity(item.id.toString())}
                             >
                               <Plus className="h-4 w-4" />
                             </Button>
@@ -177,7 +207,7 @@ const CartPage = () => {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 ml-4 text-gray-500 hover:text-red-500"
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeItem(item.id.toString())}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

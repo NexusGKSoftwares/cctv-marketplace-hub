@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedImage } from "@/components/ui/motion";
 import { ShoppingCart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { showSuccessAlert } from "@/utils/sweetAlert";
+import { toast } from "sonner";
 
 export interface Product {
   id: number;
@@ -34,7 +36,7 @@ const ProductCard = ({ product, className }: ProductCardProps) => {
     
     // Check if product already exists in cart
     const existingProductIndex = currentCart.findIndex(
-      (item: { id: number }) => item.id === product.id
+      (item: { id: string }) => item.id === product.id.toString()
     );
     
     if (existingProductIndex >= 0) {
@@ -42,14 +44,20 @@ const ProductCard = ({ product, className }: ProductCardProps) => {
       currentCart[existingProductIndex].quantity += 1;
     } else {
       // Add new product with quantity 1
-      currentCart.push({ ...product, quantity: 1 });
+      currentCart.push({ id: product.id.toString(), quantity: 1 });
     }
     
     // Save updated cart to localStorage
     localStorage.setItem("cart", JSON.stringify(currentCart));
     
-    // Show confirmation
-    alert(`${product.name} added to cart!`);
+    // Trigger storage event for other components to detect the change
+    window.dispatchEvent(new Event("storage"));
+    
+    // Show success message with SweetAlert
+    showSuccessAlert(`${product.name} added to cart!`);
+    
+    // Also show a toast notification
+    toast.success(`${product.name} added to cart!`);
   };
 
   return (
