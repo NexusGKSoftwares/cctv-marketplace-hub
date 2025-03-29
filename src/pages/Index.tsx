@@ -3,25 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnimatedButton, AnimatedImage, FadeIn, ScaleIn, SlideIn, StaggeredContainer, StaggeredItem } from "@/components/ui/motion";
 import { Link } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import { products } from "@/data/products";
+import ProductCard from "@/components/ProductCard";
 
 const Index = () => {
+  // Get 3 featured products
+  const featuredProducts = products.filter(product => product.featured).slice(0, 3);
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <FadeIn>
-        <header className="bg-white shadow-sm">
-          <div className="container mx-auto px-4 py-6 flex justify-between items-center">
-            <SlideIn direction="left">
-              <h1 className="text-2xl font-bold text-gray-900">CCTV Marketplace</h1>
-            </SlideIn>
-            <SlideIn direction="right">
-              <nav className="space-x-4">
-                <Button variant="ghost">Login</Button>
-                <Button>Sign Up</Button>
-              </nav>
-            </SlideIn>
-          </div>
-        </header>
-      </FadeIn>
+      <Navbar />
 
       <main className="container mx-auto px-4 py-8">
         <ScaleIn delay={0.2}>
@@ -33,7 +25,7 @@ const Index = () => {
                   <p className="text-blue-100 mb-6">Secure your home or business with our premium selection of surveillance equipment.</p>
                   <div className="flex gap-4">
                     <AnimatedButton className="bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-md font-medium">
-                      Shop Now
+                      <Link to="/products">Shop Now</Link>
                     </AnimatedButton>
                     <AnimatedButton className="bg-transparent text-white border border-white hover:bg-white/10 px-6 py-3 rounded-md font-medium">
                       Learn More
@@ -56,42 +48,17 @@ const Index = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Products</h2>
             <StaggeredContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((item) => (
-                <StaggeredItem key={item}>
-                  <Card className="overflow-hidden h-full hover:shadow-md transition-shadow">
-                    <div className="h-48 overflow-hidden">
-                      <AnimatedImage
-                        src={`https://source.unsplash.com/random/300x200?cctv,${item}`}
-                        alt="CCTV Product"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <CardHeader>
-                      <CardTitle>HD Security Camera</CardTitle>
-                      <CardDescription>1080p | Night Vision | Weather-resistant</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-2xl font-bold text-gray-900">$199.99</p>
-                      <div className="flex items-center mt-2">
-                        <div className="flex text-yellow-400">
-                          {[...Array(5)].map((_, i) => (
-                            <svg key={i} xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          ))}
-                        </div>
-                        <span className="ml-2 text-sm text-gray-600">(42 reviews)</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <AnimatedButton className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md">
-                        Add to Cart
-                      </AnimatedButton>
-                    </CardFooter>
-                  </Card>
+              {featuredProducts.map((product) => (
+                <StaggeredItem key={product.id}>
+                  <ProductCard product={product} />
                 </StaggeredItem>
               ))}
             </StaggeredContainer>
+            <div className="text-center mt-8">
+              <Button asChild>
+                <Link to="/products">View All Products</Link>
+              </Button>
+            </div>
           </section>
         </FadeIn>
 
@@ -119,6 +86,20 @@ const Index = () => {
             </div>
           </section>
         </SlideIn>
+
+        <FadeIn>
+          <section className="mb-12 bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="p-8 md:p-12 text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to secure your property?</h2>
+              <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+                Our security experts are ready to help you find the perfect surveillance solution for your home or business.
+              </p>
+              <AnimatedButton className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md font-medium">
+                <Link to="/products">Get Started Today</Link>
+              </AnimatedButton>
+            </div>
+          </section>
+        </FadeIn>
       </main>
 
       <FadeIn>
@@ -132,9 +113,9 @@ const Index = () => {
               <div>
                 <h4 className="text-white font-bold mb-4">Shop</h4>
                 <ul className="space-y-2">
-                  <li><Link to="/" className="hover:text-white transition-colors">Wireless Cameras</Link></li>
-                  <li><Link to="/" className="hover:text-white transition-colors">Wired Cameras</Link></li>
-                  <li><Link to="/" className="hover:text-white transition-colors">Accessories</Link></li>
+                  <li><Link to="/products?category=Indoor Cameras" className="hover:text-white transition-colors">Indoor Cameras</Link></li>
+                  <li><Link to="/products?category=Outdoor Cameras" className="hover:text-white transition-colors">Outdoor Cameras</Link></li>
+                  <li><Link to="/products?category=Accessories" className="hover:text-white transition-colors">Accessories</Link></li>
                 </ul>
               </div>
               <div>
