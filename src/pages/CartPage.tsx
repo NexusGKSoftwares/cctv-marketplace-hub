@@ -24,13 +24,16 @@ const CartPage = () => {
     setCartItems(storedCart);
 
     // Map cart items to products data
-    const productData = storedCart.map((item: CartItem) => {
-      const product = products.find((p) => p.id.toString() === item.id);
-      return {
-        ...product,
-        quantity: item.quantity,
-      };
-    });
+    const productData = storedCart
+      .map((item: CartItem) => {
+        const product = products.find((p) => p.id.toString() === item.id);
+        if (!product) return null; // Skip if product not found
+        return {
+          ...product,
+          quantity: item.quantity,
+        };
+      })
+      .filter(Boolean); // Remove any null items
 
     setCartProducts(productData);
   }, []);
@@ -43,13 +46,16 @@ const CartPage = () => {
     window.dispatchEvent(new Event("storage"));
 
     // Update cart products
-    const productData = updatedCart.map((item: CartItem) => {
-      const product = products.find((p) => p.id.toString() === item.id);
-      return {
-        ...product,
-        quantity: item.quantity,
-      };
-    });
+    const productData = updatedCart
+      .map((item: CartItem) => {
+        const product = products.find((p) => p.id.toString() === item.id);
+        if (!product) return null; // Skip if product not found
+        return {
+          ...product,
+          quantity: item.quantity,
+        };
+      })
+      .filter(Boolean); // Remove any null items
 
     setCartProducts(productData);
   };
@@ -81,7 +87,7 @@ const CartPage = () => {
 
   const calculateSubtotal = () => {
     return cartProducts.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) => total + (item.price || 0) * item.quantity,
       0
     );
   };
@@ -144,7 +150,7 @@ const CartPage = () => {
                             </Link>
                             <p className="text-sm text-gray-500 mb-2">{item.category}</p>
                             <p className="text-base font-semibold text-gray-900">
-                              ${item.price.toFixed(2)}
+                              ${(item.price || 0).toFixed(2)}
                             </p>
                           </div>
 
