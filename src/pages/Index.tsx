@@ -1,9 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnimatedButton, AnimatedImage, FadeIn, ScaleIn, SlideIn, StaggeredContainer, StaggeredItem } from "@/components/ui/motion";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
@@ -102,42 +102,7 @@ const Index = () => {
         </FadeIn>
       </main>
 
-      <FadeIn>
-        <footer className="bg-gray-900 text-gray-300">
-          <div className="container mx-auto px-4 py-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div>
-                <h3 className="text-white font-bold text-lg mb-4">CCTV Marketplace</h3>
-                <p className="mb-4">Your one-stop shop for all your security camera needs.</p>
-              </div>
-              <div>
-                <h4 className="text-white font-bold mb-4">Shop</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/products?category=Indoor Cameras" className="hover:text-white transition-colors">Indoor Cameras</Link></li>
-                  <li><Link to="/products?category=Outdoor Cameras" className="hover:text-white transition-colors">Outdoor Cameras</Link></li>
-                  <li><Link to="/products?category=Accessories" className="hover:text-white transition-colors">Accessories</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-bold mb-4">Company</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/" className="hover:text-white transition-colors">About Us</Link></li>
-                  <li><Link to="/" className="hover:text-white transition-colors">Contact</Link></li>
-                  <li><Link to="/" className="hover:text-white transition-colors">Careers</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-bold mb-4">Contact Us</h4>
-                <p className="mb-2">Email: info@cctvmarketplace.com</p>
-                <p className="mb-2">Phone: +1 (123) 456-7890</p>
-              </div>
-            </div>
-            <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-              <p>© 2023 CCTV Marketplace. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
-      </FadeIn>
+      <Footer />
     </div>
   );
 };

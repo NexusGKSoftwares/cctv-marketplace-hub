@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { FadeIn, ScaleIn, SlideIn, AnimatedButton } from "@/components/ui/motion";
@@ -9,6 +8,7 @@ import { Product } from "@/components/ProductCard";
 import ProductCard from "@/components/ProductCard";
 import { ShoppingCart, Star, Shield, Archive } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -244,6 +244,8 @@ const ProductDetailPage = () => {
           </FadeIn>
         )}
       </main>
+      
+      <Footer />
     </div>
   );
 };

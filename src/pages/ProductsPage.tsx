@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { products, getAllCategories } from "@/data/products";
 import ProductCard, { Product } from "@/components/ProductCard";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const ProductsPage = () => {
   const navigate = useNavigate();
@@ -203,6 +204,8 @@ const ProductsPage = () => {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };
